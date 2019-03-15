@@ -20,6 +20,7 @@ def existCase(path):
         for file in files:
             # print(os.path.join(dirpath, file))
             caseList.append(os.path.join(dirpath, file))
+    print('测试案例共有' + str(len(caseList)))
     return caseList
 
 '''
@@ -29,7 +30,7 @@ def existCase(path):
 
 def getTest_info(section, key):
     config = configparser.ConfigParser()
-    config.read('D:\pycharm\PycharmWorkSpase\\unittest\data\\test_info.ini', encoding='utf-8')
+    config.read('D:\pycharm\PycharmWorkSpase\\unittest\\unittestAuto\data\\test_info.ini', encoding='utf-8')
     return config.get(section, key)
 
 
@@ -44,9 +45,8 @@ def getYaml(path):
     return deviceYaml
 
 
-def operate():
-    d = u2.connect('55cac15d')
-    d.app_start('com.verifone.scb.presentation')
+def operate(driver):
+    driver.app_start('com.verifone.scb.presentation')
     allyamlsList = existCase(getTest_info('test_case', 'caseYaml'))
 
     for yaml in allyamlsList:
@@ -61,7 +61,7 @@ def operate():
 
             if testcase['operate_type'] == 'click':
                 print(testcase['operate_type'] + testcase['info'])
-                d.click(float(elementList[0]), float(elementList[1]))
+                driver.click(float(elementList[0]), float(elementList[1]))
                 time.sleep(1)
                 # d(test='').click(timeout=10)
 
@@ -71,7 +71,7 @@ def operate():
 
             elif testcase['operate_type'] == 'sentkey':
                 print(testcase['operate_type'] + testcase['info'])
-                d(text="Settings").set_text("你好")
+                driver(text="Settings").set_text("你好")
                 pass
 
             else:
@@ -97,7 +97,7 @@ def operate():
 
 if __name__ == '__main__':
     # 返回字典
-    homeyaml = getYaml('D:\pycharm\PycharmWorkSpase\\unittest\yamls\Home\home01.yaml')
+    homeyaml = getYaml('D:\pycharm\PycharmWorkSpase\\unittestAuto\yamls\Home\home01.yaml')
     print(homeyaml)
     # print(getTest_info('test_package_name', 'package_name'))
     operate()

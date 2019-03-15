@@ -9,8 +9,10 @@ import os
 # 检查是否有测试案例
 import subprocess
 import threading
-import unittest
-from po.Page import getTest_info
+import uiautomator2 as u2
+
+from unittestAuto.po.Page import existCase, getTest_info
+from unittestAuto.po.Process import Process
 
 # 检查设备连接
 def getDevices():
@@ -35,18 +37,19 @@ class MyThread(threading.Thread):
     '''
     创建log，开启服务，加载用例
     '''
+
     def run(self):
         # mkdirLog()
-        # driver = u2.connect(self.device)
-        case_path = getTest_info('test_case', 'case')  # case所在路径
-        print(case_path)
-        discover = unittest.defaultTestLoader.discover(case_path, pattern="Process.py")
-        runner = unittest.TextTestRunner(verbosity=2)  # verbosity控制输出的执行结果的详细程度，可为0，1，2，其中0最简单，1是默认值，2最详细
-        runner.run(discover)
+        driver = u2.connect(self.device)
+        Process().main(driver)
+
 
 if __name__ == '__main__':
-    # print(existCase("D:\pycharm\PycharmWorkSpase\\unittest\yamls"))
-    for device in getDevices():
-        test_run = MyThread(device)
-        test_run.start()
-        test_run.join()
+    if len(existCase(getTest_info('test_case', 'caseYaml'))) > 0:
+        for device in getDevices():
+            test_run = MyThread(device)
+            test_run.start()
+            test_run.join()
+
+    else:
+        print("测试案例不存在")

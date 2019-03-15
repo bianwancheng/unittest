@@ -5,19 +5,17 @@
 # @Site     : 
 # @File     : Process.py
 # @Software  : PyCharm
-# import unittest
+# import unittestAuto
 import os
-import unittest
 
-from RunAllcase import MyThread
-from lib.adbUtils import ADB
-from po.Page import getTest_info, operate
+from unittestAuto.lib.adbUtils import ADB
+from unittestAuto.po.Page import getTest_info, operate
 
 
-class ProcessUnitTest(unittest.TestCase):
+class Process:
 
     @classmethod
-    def setUpClass(cls):
+    def beforeClass(cls):
         # 安装atx和apk
         package_name = getTest_info('test_package_name', 'package_name')
         package_atx = getTest_info('test_package_name', 'package_atx')
@@ -30,13 +28,16 @@ class ProcessUnitTest(unittest.TestCase):
             pass
 
     @classmethod
-    def tearDownClass(cls):
+    def afterClass(cls):
         # 返回apk主页面
         ADB().start_activity('com.verifone.adc.presentation.view.activities.MainActivity')
 
-    def testProcess(self):
+    def main(self, driver):
         # 解析yaml文件并执行对应操作
-        operate()
+        self.beforeClass()
+        operate(driver)
+        self.afterClass()
+
 
 if __name__ == '__main__':
     pass
