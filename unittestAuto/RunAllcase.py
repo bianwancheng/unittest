@@ -11,10 +11,12 @@ import subprocess
 import threading
 import uiautomator2 as u2
 
-from unittestAuto.po.Page import existCase, getTest_info
 from unittestAuto.po.Process import Process
 
 # 检查设备连接
+from unittestAuto.public.PageMethod import getTest_info, existCase
+
+
 def getDevices():
     '''
     换行分割截取掉头和尾，然后用\T（Tab）截取
@@ -41,7 +43,7 @@ class MyThread(threading.Thread):
     def run(self):
         # mkdirLog()
         driver = u2.connect(self.device)
-        Process().main(driver)
+        Process().runAllCase(driver)
 
 
 if __name__ == '__main__':

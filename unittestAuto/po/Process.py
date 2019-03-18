@@ -9,7 +9,8 @@
 import os
 
 from unittestAuto.lib.adbUtils import ADB
-from unittestAuto.po.Page import getTest_info, operate
+from unittestAuto.po.Page import operate
+from unittestAuto.public.PageMethod import getTest_info, existCase
 
 
 class Process:
@@ -32,10 +33,19 @@ class Process:
         # 返回apk主页面
         ADB().start_activity('com.verifone.adc.presentation.view.activities.MainActivity')
 
-    def main(self, driver):
+    def runAllCase(self, driver):
         # 解析yaml文件并执行对应操作
         self.beforeClass()
-        operate(driver)
+        allyamlsList = existCase(getTest_info('test_case', 'caseYaml'))
+        operate(driver, allyamlsList)
+        self.afterClass()
+
+    def runOneCase(self, driver, casePath):
+        # 解析yaml文件并执行对应操作
+        self.beforeClass()
+        oneYaml = []
+        oneYaml.append(casePath)
+        operate(driver, oneYaml)
         self.afterClass()
 
 
