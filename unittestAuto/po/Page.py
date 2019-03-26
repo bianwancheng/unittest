@@ -35,14 +35,22 @@ def operate(driver, yaml_list):
                 print(testcase['operate_type'] + testcase['info'])
                 # 如果可以转换成float说明是坐标，否则就是str
                 try:
+                    # 可能出现异常的代码
                     elementList[0] = float(elementList[0])
                     elementList[1] = float(elementList[1])
                     clickByXY(driver, elementList)
                     time.sleep(1)
                 except:
-                    # element_info内容为字符串：text='', outTime=''
+                    # 出现异常后执行的代码
+                    # print('element_info内容为字符串：text='', outTime=''')
                     clickByText(driver, elementList)
                     time.sleep(1)
+                else:
+                    # 如果没有异常执行的代码
+                    pass
+                finally:
+                    # 不管是否出现异常都会执行finally 具体放在那里是否可以和else一起用？
+                    pass
 
             elif testcase['operate_type'] == 'scroll':
                 print(testcase['operate_type'] + testcase['info'])
