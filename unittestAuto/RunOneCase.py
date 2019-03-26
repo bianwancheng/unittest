@@ -50,7 +50,7 @@ class MyThread(threading.Thread):
     def run(self):
         # mkdirLog()
         driver = u2.connect(self.device)
-        Process().runOneCase(driver, 'H:\homeGit\\unittest\\unittestAuto\yamls\Setting\settingXimalaya.yaml')
+        Process().runOneCase(driver, 'D:\pycharm\PycharmWorkSpase\\unittest\\unittestAuto\yamls\ServiceTester\scbQR.yaml')
 
 
 if __name__ == '__main__':

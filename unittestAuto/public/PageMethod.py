@@ -40,7 +40,7 @@ def existCase(path):
 
 def getTest_info(section, key):
     config = configparser.ConfigParser()
-    config.read('H:\homeGit\\unittest\\unittestAuto\data\\test_info.ini', encoding='utf-8')
+    config.read('D:\pycharm\PycharmWorkSpase\\unittest\\unittestAuto\data\\test_info.ini', encoding='utf-8')
     return config.get(section, key)
 
 
@@ -62,15 +62,15 @@ def getYaml(path):
 '''
 
 
-def clickByXY(driver, elementinfo_List):
-    elementList = elementinfo_List.split(',')
-    return driver.click(float(elementList[0]), float(elementList[1]))
+def clickByXY(driver, elementList):
+    driver.click(elementList[0], elementList[1])
+
 
 '''
 @description 通过text点击
 @:parameter driver, elementinfo_List
 '''
 
-def clickByText(driver, elementinfo_List):
-    elementList = elementinfo_List.split(',')
-    return driver(text=elementList[0]).click(timeout=elementList[1])
+
+def clickByText(driver, elementList):
+    driver(text=elementList[0]).click(timeout=int(elementList[1]))

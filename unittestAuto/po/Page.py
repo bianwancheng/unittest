@@ -1,55 +1,26 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time     : 2019/3/13 17:01
-# @Author  :  wancheng.b
-# @Site     : 
-# @File     : Page.py
-# @Software  : PyCharm
-import configparser
+"""
+-------------------------------------------------
+   File Name：     RunOneCase.py
+   Description :
+   Author :       bianwancheng
+   date：          2019/3/18
+-------------------------------------------------
+   Change Activity:
+                   2019/3/18:
+-------------------------------------------------
+__author__ = 'wancheng.b'
+"""
+
 import time
-
-import yaml
 import os
-import uiautomator2 as u2
-
-# # 检查测试案例是否存在,return casedirlist
-# def existCase(path):
-#     caseList = []
-#     for dirpath, dirname, files in os.walk(path):
-#         for file in files:
-#             # print(os.path.join(dirpath, file))
-#             caseList.append(os.path.join(dirpath, file))
-#     print('测试案例共有' + str(len(caseList)))
-#     return caseList
-#
-# '''
-# 获取test_info.ini section下面的key对应的value值
-# '''
-#
-#
-# def getTest_info(section, key):
-#     config = configparser.ConfigParser()
-#     config.read('H:\homeGit\\unittest\\unittestAuto\data\\test_info.ini', encoding='utf-8')
-#     return config.get(section, key)
-#
-#
-# '''
-# 解析yaml，return：dict
-# '''
-#
-#
-# def getYaml(path):
-#     with open(path, 'r', encoding='utf-8')as f:
-#         deviceYaml = yaml.load(f)
-#     return deviceYaml
-from unittestAuto.public.PageMethod import getYaml, clickByXY, clickByText
+from unittestAuto.public.PageMethod import getYaml, clickByXY, clickByText, getTest_info
 
 
 def operate(driver, yaml_list):
-    driver.app_start('com.verifone.scb.presentation')
+    driver.app_start(getTest_info('test_package_name', 'package_name'))
     print(yaml_list)
     for yaml in yaml_list:
-        print(12313123)
         caseYaml = getYaml(yaml)
         testinfo = caseYaml['testinfo']
         testcases = caseYaml['testcase']
@@ -57,17 +28,21 @@ def operate(driver, yaml_list):
 
         for testcase in testcases:
             element_info = testcase['element_info']
-            elementList = element_info.split(',')
+            elementList = element_info.split(', ')
+            # print(elementList)
 
             if testcase['operate_type'] == 'click':
                 print(testcase['operate_type'] + testcase['info'])
-                # 如果第一个为float类型选择clickByXY()方法
-                if type(elementList[0]) == float:
-                    clickByXY(driver, element_info)
-                else:
-                    clickByText(driver, element_info)
-                time.sleep(1)
-                # d(test='').click(timeout=10)
+                # 如果可以转换成float说明是坐标，否则就是str
+                try:
+                    elementList[0] = float(elementList[0])
+                    elementList[1] = float(elementList[1])
+                    clickByXY(driver, elementList)
+                    time.sleep(1)
+                except:
+                    # element_info内容为字符串：text='', outTime=''
+                    clickByText(driver, elementList)
+                    time.sleep(1)
 
             elif testcase['operate_type'] == 'scroll':
                 print(testcase['operate_type'] + testcase['info'])
