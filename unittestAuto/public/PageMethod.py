@@ -12,7 +12,6 @@
 __author__ = 'wancheng.b'
 """
 
-# 检查测试案例是否存在,return casedirlist
 import configparser
 import os
 
