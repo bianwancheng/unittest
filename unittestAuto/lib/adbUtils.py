@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from unittestAuto.public import LogUtils
+
 __author__ = 'joko'
 
 """
@@ -23,22 +25,22 @@ if system is "Windows":
 else:
     find_util = "grep"
 
-# 判断是否设置环境变量ANDROID_HOME
-if "ANDROID_HOME" in os.environ:
-    if system == "Windows":
-        command = os.path.join(
-            os.environ["ANDROID_HOME"],
-            "platform-tools",
-            "adb.exe")
-    else:
-        command = os.path.join(
-            os.environ["ANDROID_HOME"],
-            "platform-tools",
-            "adb")
-else:
-    raise EnvironmentError(
-        "Adb not found in $ANDROID_HOME path: %s." %
-        os.environ["ANDROID_HOME"])
+# # 判断是否设置环境变量ANDROID_HOME
+# if "ANDROID_HOME" in os.environ:
+#     if system == "Windows":
+#         command = os.path.join(
+#             os.environ["ANDROID_HOME"],
+#             "platform-tools",
+#             "adb.exe")
+#     else:
+#         command = os.path.join(
+#             os.environ["ANDROID_HOME"],
+#             "platform-tools",
+#             "adb")
+# else:
+#     raise EnvironmentError(
+#         "Adb not found in $ANDROID_HOME path: %s." %
+#         os.environ["ANDROID_HOME"])
 
 
 class ADB(object):
@@ -50,10 +52,12 @@ class ADB(object):
         if device_id == "":
             self.device_id = ""
         else:
+            # adb -s 设备号 命令  指定设备执行命令   adb -s as23525 logcat - v
             self.device_id = "-s %s" % device_id
 
     def adb(self, args):
-        cmd = "%s %s %s" % (command, self.device_id, str(args))
+        cmd = "%s %s %s" % ('adb', self.device_id, str(args))
+        print(cmd)
         return subprocess.Popen(
             cmd,
             shell=True,
@@ -61,7 +65,7 @@ class ADB(object):
             stderr=subprocess.PIPE)
 
     def shell(self, args):
-        cmd = "%s %s shell %s" % (command, self.device_id, str(args),)
+        cmd = "%s %s shell %s" % ('adb', self.device_id, str(args),)
         return subprocess.Popen(
             cmd,
             shell=True,
@@ -367,7 +371,7 @@ class ADB(object):
         #     if 'Failure' in line:
         #         print line.strip()
         return self.adb("install %s" % app_file)
-
+    @LogUtils.l()
     def is_install(self, packageName):
         """
         判断应用是否安装，已安装返回True，否则返回False
@@ -992,5 +996,5 @@ class ADB(object):
 
 
 if __name__ == "__main__":
-    A = ADB()
-    print(A.get_focused_package_and_activity())
+    adb = ADB('55cac15d').adb('install D:\pycharm\PycharmWorkSpase\Auto_Analysis-master\data\\app.apk').stdout.read()
+

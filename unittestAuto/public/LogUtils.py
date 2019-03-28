@@ -1,15 +1,23 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time     : 2019/3/15 18:03
-# @Author  :  wancheng.b
-# @Site     : 
-# @File     : LogUtils.py
-# @Software  : PyCharm
+"""
+-------------------------------------------------
+   File Name：     RunOneCase.py
+   Description :
+   Author :       bianwancheng
+   date：          2019/3/27
+-------------------------------------------------
+   Change Activity:
+                   2019/3/27:
+-------------------------------------------------
+__author__ = 'wancheng.b'
+"""
+import sys
 import time
 
 
 def get_now_time():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+
 
 class colour:
     @staticmethod
@@ -19,7 +27,7 @@ class colour:
             p = lambda x: cprint(x, '%s' % colour)
             return p(msg)
         except:
-            print (msg)
+            print(msg)
 
     @staticmethod
     def show_verbose(msg):
@@ -48,7 +56,6 @@ class Logging:
     @staticmethod
     def error(msg):
         if Logging.flag == True:
-            # print get_now_time() + " [Error]:" + "".join(msg)
             colour.show_error(get_now_time() + " [Error]:" + "".join(msg))
 
     @staticmethod
@@ -70,3 +77,26 @@ class Logging:
     def success(msg):
         if Logging.flag == True:
             colour.show_verbose(get_now_time() + " [Success]:" + "".join(msg))
+
+
+def l():
+    """
+    打印log
+    文件名+函数名,return
+    :return:
+    """
+
+    def log(func):
+        def wrapper(*args, **kwargs):
+            t = func(*args, **kwargs)
+            filename = str(sys.argv[0]).split('/')[-1].split('.')[0]
+            Logging.success('{}:{}, return:{}'.format(filename, func.__name__, t))
+            return t
+
+        return wrapper
+
+    return log
+
+
+if __name__ == '__main__':
+    Logging.warn('124')
