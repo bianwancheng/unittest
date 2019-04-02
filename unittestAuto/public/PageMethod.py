@@ -14,8 +14,9 @@ __author__ = 'wancheng.b'
 
 import configparser
 import os
+import random
+import time
 import yaml
-from unittestAuto.public import LogUtils as U
 from unittestAuto.public import LogUtils
 from unittestAuto.public.LogUtils import Logging
 
@@ -93,13 +94,27 @@ def clickByText(driver, elementList):
         raise e
 
 
-@U.l()
-def __save_android_log(self):
+def mkdir_file():
     """
 
-    :return:清理当前设备缓存log,并且记录当前设备log
+    :return:创建日志存放文件夹
     """
-    android_log = public.GetLog.Al(self.device)
-    log_file = self.all_result_path + '/log/{}.log'.format(self.filename)
-    android_log.main(log_file)
-    return log_file
+    result_file = getTest_info('test_case', 'log_file')
+    result_file_every = result_file + '/' + \
+                        time.strftime("%Y-%m-%d_%H_%M_%S{}".format(random.randint(10, 99)),
+                                      time.localtime(time.time()))
+    file_list = [
+        result_file,
+        result_file_every,
+        result_file_every + '/log',
+        result_file_every + '/html',
+        result_file_every + '/img',
+        # result_file_every + '/status'
+    ]
+    if not os.path.exists(result_file):
+        os.mkdir(result_file)
+
+    for file_path in file_list:
+        if not os.path.exists(file_path):
+            os.mkdir(file_path)
+    return result_file_every

@@ -15,7 +15,7 @@ class Al:
 
     def _get_android_log(self, log_path):
         """
-
+        开启记录log
         :return:清理当前设备缓存log,并且记录当前设备log
         """
 
@@ -23,7 +23,7 @@ class Al:
         adb.c_logcat()
         adb.logcat(log_path)
 
-    def main(self, log_path):
+    def getLog(self, log_path):
         """
 
         :return: 开启记录log
@@ -33,4 +33,4 @@ class Al:
 
 if __name__ == '__main__':
     a = Al('55cac15d')
-    a.main('D:\pycharm\PycharmWorkSpase\Auto_Analysis-master\\result')
+    a.getLog('D:\pycharm\PycharmWorkSpase\\unittest\\unittestAuto\\result\log\getlog.txt')

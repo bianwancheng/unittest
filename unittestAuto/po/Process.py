@@ -7,14 +7,11 @@
 # @Software  : PyCharm
 # import unittestAuto
 import os
-import random
 import time
-import uiautomator2 as u2
 from unittestAuto.lib.adbUtils import ADB
-from unittestAuto.po.Page import operate, PagePo
-from unittestAuto.public.GetLog import Al
+from unittestAuto.po.Page import PagePo
 from unittestAuto.public.LogUtils import Logging
-from unittestAuto.public.PageMethod import getTest_info, existCase
+from unittestAuto.public.PageMethod import getTest_info, existCase, mkdir_file
 
 
 class Process:
@@ -58,51 +55,6 @@ class Process:
         # 返回apk主页面
         ADB().start_activity('com.verifone.adc.presentation.view.activities.MainActivity')
 
-    @classmethod
-    def __save_android_log(self):
-        """
-
-        :return:清理当前设备缓存log,并且记录当前设备log
-        """
-        android_log = Al(self.device)
-        log_file = self.all_result_path + '/log/{}.log'.format(self.filename)
-        android_log.main(log_file)
-        return log_file
-
-    @classmethod
-    def __save_android_result(self):
-        """
-        生成测试报告
-        :return: 测试报告路径
-        """
-        r = Gr(self.all_result_path, self.device)
-        r.main()
-        return self.all_result_path
-
-    @classmethod
-    def mkdir_file(self):
-        """
-
-        :return:创建日志存放文件夹
-        """
-        result_file = getTest_info('test_case', 'log_file')
-        result_file_every = result_file + '/' + \
-                            time.strftime("%Y-%m-%d_%H_%M_%S{}".format(random.randint(10, 99)),
-                                          time.localtime(time.time()))
-        file_list = [
-            result_file,
-            result_file_every,
-            result_file_every + '/log',
-            result_file_every + '/per',
-            result_file_every + '/img',
-            result_file_every + '/status']
-        if not os.path.exists(result_file):
-            os.mkdir(result_file)
-
-        for file_path in file_list:
-            if not os.path.exists(file_path):
-                os.mkdir(file_path)
-        return result_file_every
 
     def runAllCase(self):
         '''
@@ -118,8 +70,8 @@ class Process:
         # 解析yaml文件并执行对应操作
         Process.beforeClass()
         allyamlsList = existCase(getTest_info('test_case', 'caseYaml'))
-        driver = u2.connect(self.device)
-        operate(driver, allyamlsList)
+        Page = PagePo(self.device, mkdir_file(), allyamlsList)
+        Page.main()
         Process.afterClass()
 
     def runOneCase(self, casePath):
@@ -133,13 +85,14 @@ class Process:
         :return:
         '''
         Process.beforeClass()
-        driver = u2.connect(self.device)
+        # driver = u2.connect(self.device)
         oneYaml = []
         oneYaml.append(casePath)
         Logging.info('当前测试用例为' + oneYaml[0])
-        Page = PagePo(driver, self.mkdir_file(), oneYaml)
+        Page = PagePo(self.device, mkdir_file(), oneYaml)
         Page.main()
         Process.afterClass()
+
 
 
 if __name__ == '__main__':
